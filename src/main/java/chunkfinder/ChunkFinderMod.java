@@ -84,8 +84,7 @@ public class ChunkFinderMod implements ClientModInitializer {
             "key.chunkfinder.toggle", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, KeyMapping.Category.MISC));
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
-        LevelRenderEvents.DEBUG_RENDER.register(ctx -> render());
-        registerCommands();
+        LevelRenderEvents.BEFORE_GIZMOS.register(ctx -> render());
     }
 
     private void registerCommands() {
@@ -130,7 +129,7 @@ public class ChunkFinderMod implements ClientModInitializer {
     private void onTick(Minecraft mc) {
         while (toggleKey.consumeClick()) {
             CFG.enabled = !CFG.enabled; changed();
-            if (mc.player != null) mc.player.displayClientMessage(Component.literal("Chunk Finder " + (CFG.enabled ? "ON" : "OFF")), true);
+        if (mc.player != null) mc.player.sendSystemMessage(Component.literal("Chunk Finder " + (CFG.enabled ? "ON" : "OFF")));
         }
         if (!CFG.enabled || mc.level == null || mc.player == null) return;
 
